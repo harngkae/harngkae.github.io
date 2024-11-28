@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微笑小熊</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #fcfcfc;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            position: relative;
+        }
+
+        .bear {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: url('https://example.com/smiling-bear.jpg') no-repeat center/cover;
+            cursor: pointer;
+        }
+
+        .bubble {
+            position: absolute;
+            top: -40px;
+            right: -20px;
+            background: #fff;
+            border: 2px solid #000;
+            border-radius: 10px;
+            padding: 10px;
+            display: none;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="bear" onclick="showBubble()"></div>
+        <div class="bubble" id="bubble">你好，熊笑</div>
+    </div>
+
+    <script>
+        function showBubble() {
+            const bubble = document.getElementById('bubble');
+            bubble.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
