@@ -24,6 +24,8 @@
             height: 300px;
             background: url('https://s21.ax1x.com/2024/11/28/pA5Q6IK.png') no-repeat center/cover;
             cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.5s;
         }
 
         .bubble {
@@ -34,8 +36,10 @@
             border: 2px solid #000;
             border-radius: 10px;
             padding: 10px;
+            opacity: 0;
             display: none;
             box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.5s;
         }
 
         .bubble::after {
@@ -49,37 +53,76 @@
             border-right: 10px solid transparent;
             border-top: 10px solid #fff;
         }
+
+        .fade-in {
+            opacity: 1;
+        }
+
+        .fade-out {
+            opacity: 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="bear" id="bear" onclick="handleClick()"></div>
-        <div class="bubble" id="bubble">你好，熊笑</div>
+        <div class="bear" id="bear"></div>
+        <div class="bubble" id="bubble"></div>
     </div>
 
     <script>
+        const bear = document.getElementById('bear');
+        const bubble = document.getElementById('bubble');
+
         let clickCount = 0;
+        let typingInterval;
 
-        function handleClick() {
-            const bubble = document.getElementById('bubble');
-            const bear = document.getElementById('bear');
+        function typeText(element, text) {
+            element.innerHTML = '';
+            let index = 0;
+            clearInterval(typingInterval);
+            typingInterval = setInterval(() => {
+                if (index < text.length) {
+                    element.innerHTML += text[index++];
+                } else {
+                    clearInterval(typingInterval);
+                }
+            }, 100);
+        }
 
+        function fadeIn(element) {
+            element.style.display = 'block';
+            setTimeout(() => element.classList.add('fade-in'), 10);
+        }
+
+        function fadeOut(element) {
+            element.classList.remove('fade-in');
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 500);
+        }
+
+        bear.style.opacity = 1; // Initially show the first image
+
+        bear.addEventListener('click', () => {
             clickCount++;
 
             if (clickCount === 1) {
-                // Show bubble
-                bubble.style.display = 'block';
+                // Show the first bubble
+                typeText(bubble, '你好，熊笑');
+                fadeIn(bubble);
             } else if (clickCount === 2) {
-                // Change image and hide bubble
-                bear.style.background = "url('https://s21.ax1x.com/2024/11/28/pA5QCgH.png') no-repeat center/cover";
-                bubble.style.display = 'none';
+                // Hide bubble and change to second image
+                fadeOut(bubble);
+                setTimeout(() => {
+                    bear.style.backgroundImage = "url('https://s21.ax1x.com/2024/11/28/pA5QCgH.png')";
+                }, 500);
             } else if (clickCount === 3) {
-                // Show new message in bubble
-                bubble.textContent = '我的名字，我的名字也叫熊笑';
-                bubble.style.display = 'block';
-                clickCount = 0; // Reset for cycling behavior
+                // Show the second bubble
+                typeText(bubble, '我的名字，我的名字也叫熊笑');
+                fadeIn(bubble);
+                clickCount = 0; // Reset to loop
             }
-        }
+        });
     </script>
 </body>
 </html>
