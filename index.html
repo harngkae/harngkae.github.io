@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>微笑小熊</title>
+    <title>互动小熊</title>
     <style>
         body {
             margin: 0;
@@ -13,31 +13,33 @@
             height: 100vh;
             background-color: #fcfcfc;
             font-family: Arial, sans-serif;
+            cursor: pointer;
         }
 
         .container {
             position: relative;
+            width: 300px;
+            height: 300px;
         }
 
         .bear {
-            width: 300px;
-            height: 300px;
-            background: url('https://s21.ax1x.com/2024/11/28/pA5Q6IK.png') no-repeat center/cover;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.5s;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 0.5s;
         }
 
         .bubble {
             position: absolute;
-            top: -40px;
+            top: -50px;
             right: -20px;
             background: #fff;
             border: 2px solid #000;
             border-radius: 10px;
             padding: 10px;
-            opacity: 0;
             display: none;
+            opacity: 0;
             box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
             transition: opacity 0.5s;
         }
@@ -54,11 +56,12 @@
             border-top: 10px solid #fff;
         }
 
-        .fade-in {
+        .bubble.fade-in {
+            display: block;
             opacity: 1;
         }
 
-        .fade-out {
+        .bubble.fade-out {
             opacity: 0;
         }
     </style>
@@ -72,10 +75,20 @@
     <script>
         const bear = document.getElementById('bear');
         const bubble = document.getElementById('bubble');
+        const container = document.querySelector('.container');
 
-        let clickCount = 0;
+        // 图片和文字内容数组
+        const contents = [
+            { image: "url('https://s21.ax1x.com/2024/11/28/pA5Q6IK.png')"},
+            { image: "url('https://s21.ax1x.com/2024/11/28/pA5Q6IK.png')", text: "你好，熊笑！" },
+            { image: "url('https://s21.ax1x.com/2024/11/28/pA5QCgH.png')", text: "请让我做个自我介绍。" },
+            { image: "url('https://s21.ax1x.com/2024/11/28/pA5Qo2F.png')", text: "这是我的第三句话！" }
+        ];
+
+        let currentIndex = 0; // 当前内容索引
         let typingInterval;
 
+        // 打字效果
         function typeText(element, text) {
             element.innerHTML = '';
             let index = 0;
@@ -89,11 +102,13 @@
             }, 100);
         }
 
+        // 淡入效果
         function fadeIn(element) {
             element.style.display = 'block';
             setTimeout(() => element.classList.add('fade-in'), 10);
         }
 
+        // 淡出效果
         function fadeOut(element) {
             element.classList.remove('fade-in');
             setTimeout(() => {
@@ -101,28 +116,31 @@
             }, 500);
         }
 
-        bear.style.opacity = 1; // Initially show the first image
+        // 显示下一内容
+        function showNextContent() {
+            const content = contents[currentIndex];
+            fadeOut(bubble);
 
-        bear.addEventListener('click', () => {
-            clickCount++;
+            setTimeout(() => {
+                // 切换图片
+                bear.style.backgroundImage = content.image;
 
-            if (clickCount === 1) {
-                // Show the first bubble
-                typeText(bubble, '你好，熊笑');
+                // 打字显示文字
+                typeText(bubble, content.text);
                 fadeIn(bubble);
-            } else if (clickCount === 2) {
-                // Hide bubble and change to second image
-                fadeOut(bubble);
-                setTimeout(() => {
-                    bear.style.backgroundImage = "url('https://s21.ax1x.com/2024/11/28/pA5QCgH.png')";
-                }, 500);
-            } else if (clickCount === 3) {
-                // Show the second bubble
-                typeText(bubble, '我的名字，我的名字也叫熊笑');
-                fadeIn(bubble);
-                clickCount = 0; // Reset to loop
-            }
-        });
+
+                // 更新索引
+                currentIndex = (currentIndex + 1) % contents.length; // 循环内容
+            }, 500);
+        }
+
+        // 初始化显示第一张图片和文字
+        bear.style.backgroundImage = contents[0].image;
+        typeText(bubble, contents[0].text);
+        fadeIn(bubble);
+
+        // 绑定点击事件到整个屏幕
+        container.addEventListener('click', showNextContent);
     </script>
 </body>
 </html>
